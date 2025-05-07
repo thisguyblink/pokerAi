@@ -1,5 +1,4 @@
 
-
 # Have this this be a list of strings and I can change it into numbers later, also J = 11, Q =12 ....
 # If there is no community card for the slot then put NONE
 # Cardnumbers = [aiCard1, aiCard2, community1, community2, community3, community4, communtiy5, aichips, opponentchips]
