@@ -1,6 +1,7 @@
 from pokerface import main
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import json
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes and origins
@@ -12,8 +13,10 @@ def hello():
 @app.route('/compute', methods=['POST'])
 def compute():
     data = request.json
-    numsList = data["nums"]
-    suitList = data["suits"]
+    nums = json.dumps(data["cards"])
+    numsList = [int(x) for x in nums]
+    suits = json.dumps(data["suits"])
+    suitsList = [str(x) for x in suits]
     emotion = data["emotion"]
     weight = data["weight"]
     # need the data formatted like ai1, ai2, opp1, opp2, com1, com2, com3, com4, com5 for numbers and suits
@@ -26,7 +29,7 @@ def compute():
     # val < 0 FOLD
     # These are the value it will return and what they mean 
 
-    return jsonify({"value" : main(numsList, suitList, emotion, weight)})
+    return jsonify({"value" : main(numsList, suitsList, emotion, weight)})
 
 if __name__ == '__main__':
     app.run(debug=True)
