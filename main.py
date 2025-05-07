@@ -67,7 +67,7 @@ def monteCarlo(nums, suits, sims):
 # Kinda work but keeping just incase 
 def simulate2(nums, suits):
     ranks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-    types = ['Spades', 'Hearts', 'Diamonds', 'Clubs']
+    types = ['Spade', 'Heart', 'Diamond', 'Club']
     allNums = [0] * 9
     allSuits = ["-"] * 9
     for i in range(9):
@@ -85,7 +85,7 @@ def simulate2(nums, suits):
 # Edit: This one works so I'm keeping it :)
 def simulate(nums, suits):
 
-    deck = [(num, suit) for num in range(2, 15) for suit in ['Spades', 'Hearts', 'Diamonds', 'Clubs']]
+    deck = [(num, suit) for num in range(2, 15) for suit in ['Spade', 'Heart', 'Diamond', 'Club']]
     
     known_cards = [(nums[i], suits[i]) for i in range(9) if nums[i] != 0 and suits[i] != ""]
 
