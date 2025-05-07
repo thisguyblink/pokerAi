@@ -110,8 +110,8 @@ def aiDecision(cardNums, cardSuites, emotion, weight):
     print(f'Weighted Probability: {weightedProb}')
     return decision(weightedProb)
 
-def response(cardNums, cardSuites, emotion, weight, img):
-    emotion, weight = read_image(img)
+def response(cardNums, cardSuites, weight, img):
+    emotion, _ = read_image(img)
     aiDecision(cardNums, cardSuites, emotion, weight)
 
   

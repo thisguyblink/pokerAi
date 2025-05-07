@@ -13,13 +13,13 @@ def hello():
 @app.route('/compute', methods=['POST'])
 def compute():
     data = request.json
-    nums = json.dumps(data["cards"])
+    nums = data["cards"]
     numsList = [int(x) for x in nums]
-    suits = json.dumps(data["suits"])
+    suits = data["suits"]
     suitsList = [str(x) for x in suits]
-    emotion = data["emotion"]
-    weight = data["weight"]
-    img = json.dumps(data["image"])
+    weight = data["ratio"]
+    img = data["image"]
+
     # need the data formatted like ai1, ai2, opp1, opp2, com1, com2, com3, com4, com5 for numbers and suits
     # also need emotion and weight for emotion
     # main(numsList, suitsList, emotion, weight)
@@ -30,7 +30,7 @@ def compute():
     # val < 0 FOLD
     # These are the value it will return and what they mean 
 
-    return jsonify({"value" : response(numsList, suitsList, emotion, weight, img)})
+    return jsonify({"value" : response(numsList, suitsList, weight, img)})
 
 if __name__ == '__main__':
     app.run(port=8080)
