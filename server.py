@@ -18,7 +18,7 @@ def compute():
     # Access the JSON data for cards, suits, and ratio
     cards = request.form.get("cards")
     suits = request.form.get("suits")
-    ratio = request.form.get("ratio")
+    ratio = float(request.form.get("ratio"))
 
     # Print the raw data
     print(cards)
@@ -36,6 +36,15 @@ def compute():
     print(cards_list)
     print(suits_list)
 
+    cards = [int(x) for x in cards_list]
+    suits = [str(x) for x in suits_list]
+    cards.insert(2, 0)
+    cards.insert(2, 0)
+    suits.insert(2, "NONE")
+    suits.insert(2, "NONE")
+
+    print(cards)
+
     # The image data is a binary file uploaded as 'image'
     img = request.files.get("image")
 
@@ -47,7 +56,7 @@ def compute():
         print(f"Emotion detected: {emotion}")
     
     # Call the decision-making logic
-    return jsonify({"value": response(cards_list, suits_list, ratio, img)})
+    return jsonify({"value": response(cards, suits, ratio, img)})
 
 
 

@@ -12,33 +12,10 @@ import random
 from evaluate import checkWinner
 from emotionReader import read_image
 
-# val == 1 ALL IN 
-# val > .5 RAISE PROPORTIONALLY 
-# val < .5 and > 0  CALL PROPORTIONALLY
-# val == 0, call if no raise
-# val < 0 FOLD
-
-def decision(prob):
-    # All in 
-    if prob > .95:
-        return 1
-    # Raise 
-    if prob < .95 and prob >.75:
-        return prob
-    # Call Agressive
-    if prob < .75 and prob > .50:
-        return .25
-    # Call Passive
-    if prob < .5 and prob > .25:
-        return 0
-    # Fold 
-    if prob < .25:
-        return -1
-
 # -1 is super happy and 1 is super sad
 # might need to scale the input to match this
 def addEmotion(probability, emotion, weight):
-    return probability + (weight * emotion)
+    return probability + (float(weight) * float(emotion) * 0.2)
 
 
 def monteCarlo(nums, suits, sims):
@@ -108,10 +85,15 @@ def aiDecision(cardNums, cardSuites, emotion, weight):
     print(f'Unweighted Probability: {unweightedProb}' )
     weightedProb = addEmotion(unweightedProb, emotion, weight)
     print(f'Weighted Probability: {weightedProb}')
-    return decision(weightedProb)
+    return weightedProb
 
 def response(cardNums, cardSuites, weight, img):
-    emotion, _ = read_image(img)
-    aiDecision(cardNums, cardSuites, emotion, weight)
+    emotion, val = read_image(img)
+    print(emotion)
+    print(val)
+    if emotion == "positive" : 
+        val *= -1
+    val /= 100
+    return aiDecision(cardNums, cardSuites, val, weight)
 
   
