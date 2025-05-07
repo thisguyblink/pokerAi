@@ -15,7 +15,7 @@ from emotionReader import read_image
 # -1 is super happy and 1 is super sad
 # might need to scale the input to match this
 def addEmotion(probability, emotion, weight):
-    return probability + (float(weight) * float(emotion) * 0.2)
+    return (probability + (float(weight) * float(emotion) * 0.2)) / 1.2
 
 
 def monteCarlo(nums, suits, sims):
@@ -32,6 +32,7 @@ def monteCarlo(nums, suits, sims):
             aiWins += 1
         elif val == .5:
             ties += 1
+            aiWins += .25
         else:
             oppWins += 1
     print(f'Ai Wins: {aiWins}')
@@ -81,7 +82,7 @@ def simulate(nums, suits):
 
 # emotion and weight for emotion can be set during the api call in the flask server
 def aiDecision(cardNums, cardSuites, emotion, weight):
-    unweightedProb = monteCarlo(cardNums, cardSuites, 100)
+    unweightedProb = monteCarlo(cardNums, cardSuites, 1000)
     print(f'Unweighted Probability: {unweightedProb}' )
     weightedProb = addEmotion(unweightedProb, emotion, weight)
     print(f'Weighted Probability: {weightedProb}')
@@ -89,11 +90,11 @@ def aiDecision(cardNums, cardSuites, emotion, weight):
 
 def response(cardNums, cardSuites, weight, img):
     emotion, val = read_image(img)
-    print(emotion)
-    print(val)
     if emotion == "positive" : 
         val *= -1
     val /= 100
+    print(val)
+    print(weight)
     return aiDecision(cardNums, cardSuites, val, weight)
 
   
