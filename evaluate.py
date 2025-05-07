@@ -54,12 +54,16 @@ def checkWinner(cardNums, cardSuites):
     aiSuits = cardSuites[0:2] + cardSuites[4:]
     oppNums = cardNums[2:4] + cardNums[4:]
     oppSuits = cardSuites[2:4] + cardSuites[4:]
+    aiRank = checkAll(aiNums, aiSuits)
+    oppRank = checkAll(oppNums, oppSuits)
+    # print(f'AI Rank: {aiRank}')
+    # print(f'OPP Rank: {oppRank}')
 
-    if checkAll(aiNums, aiSuits) > checkAll(oppNums, oppSuits):
+    if aiRank > oppRank:
         return 1
-    if checkAll(aiNums, aiSuits) == checkAll(oppNums, oppSuits):
+    if aiRank == oppRank:
         return 0.5
-    if checkAll(aiNums, aiSuits) < checkAll(oppNums, oppSuits):
+    if aiRank < oppRank:
         return 0
 
 
@@ -85,7 +89,7 @@ def checkAll(nums, suites):
     if score > 0:
         return score
     
-    score = straight(nums, suites)
+    score = straight(nums)
     if score > 0:
         return score
     
@@ -116,10 +120,10 @@ def royalFlush(nums, suites):
     # Check for a flush (same suit)
     for suit, suited_nums in suit_counts.items():
         if len(suited_nums) >= 5:
-            suited_nums.sort()
+            suited_nums = sorted(set(suited_nums))
 
             # Check for a royal flush (A, K, Q, J, 10)
-            if set([10, 11, 12, 13, 14]).issubset(suited_nums):
+            if suited_nums == (10, 11, 12, 13, 14):
                 return 10  # Found royal flush
     return 0
 
@@ -181,16 +185,18 @@ def fullHouse(nums):
 
 def flush(suites):
     counts = {}
+    
     for suit in suites:
         if suit in counts:
             counts[suit] += 1
         else: 
             counts[suit] = 1
         if counts[suit] == 5:
+            # print(f'The Suit: {suit} count is: {counts[suit]}')
             return 6
     return 0
 
-def straight(nums, suites):
+def straight(nums):
     nums = list(set(nums))         
     nums.sort()
 
@@ -233,7 +239,7 @@ def onePair(nums):
         if num in pairs:
             return 2
         else: 
-            pairs[nums] = 1
+            pairs[num] = 1
     return 0
 
 

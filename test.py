@@ -1,61 +1,29 @@
 from pokerface import main
 
-# Test Case 1: High Probability, Neutral Emotion
-cardNums_1 = [14, 12, 0, 0, 10, 11, 12, 13, 14]  # AI: Ace, Queen; Opponent: UNKNOWN; Community: 10, Jack, Queen, King, Ace
-cardSuites_1 = ['Hearts', 'Clubs', '', '', 'Clubs', 'Hearts', 'Diamonds', 'Spades', 'Diamonds']  # Suits for AI, opponent (unknown), and community cards
+def test_main():
+    print("Test 1: Pre-flop, strong hand (AA), neutral emotion: Expect raise or all-in")
+    nums = [14, 14, 0, 0, 0, 0, 0, 0, 0]  # AI: AA, rest unknown
+    suits = ['Spades', 'Hearts', "", "", "", "", "", "", ""]  
+    print("Decision:", main(nums, suits, emotion=0, weight=0.1))  # Expect raise or all-in
 
-emotion_1 = 0  # Neutral emotion
-weight_1 = 0  # Emotion weight does not affect
+    print("\nTest 2: Pre-flop, weak hand (7-2 offsuit), neutral emotion: Expect call or fold")
+    nums = [7, 2, 0, 0, 0, 0, 0, 0, 0]
+    suits = ['Spades', 'Diamonds', "", "", "", "", "", "", ""]
+    print("Decision:", main(nums, suits, emotion=0, weight=0.1))  # Expect call or fold
 
-print("Test Case 1 - High Probability, Neutral Emotion:")
-print(main(cardNums_1, cardSuites_1))  # Expected outcome: 100 (All-in, high confidence)
+    print("\nTest 3: Flop visible, one pair, positive emotion: Emotion may lead to raise")
+    nums = [9, 2, 0, 0, 9, 5, 3, 0, 0]  # AI pairs with flop
+    suits = ['Clubs', 'Hearts', "", "", 'Hearts', 'Diamonds', 'Spades', "", ""]
+    print("Decision:", main(nums, suits, emotion=0.5, weight=0.2))  # Emotion may lead to raise
 
-# Test Case 2: Low Probability, Neutral Emotion
-cardNums_2 = [2, 3, 0, 0, 9, 10, 11, 12, 13]  # AI: 2, 3; Opponent: UNKNOWN; Community: 9, 10, Jack, Queen, King
-cardSuites_2 = ['Spades', 'Diamonds', '', '', 'Spades', 'Diamonds', 'Clubs', 'Hearts', 'Spades']  # Suits for AI, opponent (unknown), and community cards
+    print("\nTest 4: Turn visible, strong draw, negative emotion: May fold due to emotion")
+    nums = [11, 12, 0, 0, 10, 9, 2, 0, 0]  # Strong straight draw
+    suits = ['Spades', 'Spades', "", "", 'Spades', 'Spades', "", "", ""]
+    print("Decision:", main(nums, suits, emotion=-0.7, weight=0.3))  # May fold due to emotion
 
-emotion_2 = 0  # Neutral emotion
-weight_2 = 0  # Emotion weight does not affect
+    print("\nTest 5: River complete, flush, neutral emotion: Expect raise or all-in")
+    nums = [4, 9, 0, 0, 6, 7, 8, 10, 2]  # AI has a flush
+    suits = ['Hearts', 'Hearts', "", "", 'Hearts', 'Hearts', 'Diamonds', 'Spades', 'Hearts']
+    print("Decision:", main(nums, suits, emotion=0, weight=0.1))  # Expect raise or all-in
 
-print("Test Case 2 - Low Probability, Neutral Emotion:")
-print(main(cardNums_2, cardSuites_2))  # Expected outcome: -1 (Fold)
-
-# Test Case 3: Positive Emotion
-cardNums_3 = [10, 11, 0, 0, 14, 9, 8, 11, 12]  # AI: 10, Jack; Opponent: UNKNOWN; Community: Ace, Jack, Queen, King, 10
-cardSuites_3 = ['Hearts', 'Clubs', '', '', 'Clubs', 'Hearts', 'Spades', 'Diamonds', 'Clubs']  # Suits for AI, opponent (unknown), and community cards
-
-emotion_3 = 0.7  # Positive emotion (AI is confident)
-weight_3 = 0.5  # Emotion weight
-
-print("Test Case 3 - Positive Emotion Affects Decision:")
-print(main(cardNums_3, cardSuites_3))  # Expected outcome: 100 (All-in due to positive emotion)
-
-# Test Case 4: Negative Emotion (Less Confident)
-cardNums_4 = [2, 3, 0, 0, 9, 10, 11, 12, 13]  # AI: 2, 3; Opponent: UNKNOWN; Community: 9, 10, Jack, Queen, King
-cardSuites_4 = ['Spades', 'Diamonds', '', '', 'Spades', 'Diamonds', 'Clubs', 'Hearts', 'Clubs']  # Suits for AI, opponent (unknown), and community cards
-
-emotion_4 = -0.7  # Negative emotion (AI is sad)
-weight_4 = 0.5  # Emotion weight
-
-print("Test Case 4 - Negative Emotion Affects Decision:")
-print(main(cardNums_4, cardSuites_4))  # Expected outcome: -1 (Fold due to negative emotion)
-
-# Test Case 5: Neutral Emotion (Unchanged Decision)
-cardNums_5 = [7, 8, 0, 0, 9, 10, 11, 12, 13]  # AI: 7, 8; Opponent: UNKNOWN; Community: 9, 10, Jack, Queen, King
-cardSuites_5 = ['Spades', 'Hearts', '', '', 'Spades', 'Hearts', 'Diamonds', 'Clubs', 'Spades']  # Suits for AI, opponent (unknown), and community cards
-
-emotion_5 = 0  # Neutral emotion
-weight_5 = 0  # Emotion weight does not affect
-
-print("Test Case 5 - Neutral Emotion (Unchanged Decision):")
-print(main(cardNums_5, cardSuites_5))  # Expected outcome: Likely to call or raise, based on the probability
-
-# Test Case 6: Tie Scenario (Edge Case)
-cardNums_6 = [10, 12, 0, 0, 13, 14, 11, 12, 10]  # AI: 10, Jack; Opponent: UNKNOWN; Community: Ace, Jack, Queen, King, 10
-cardSuites_6 = ['Spades', 'Clubs', '', '', 'Spades', 'Clubs', 'Hearts', 'Diamonds', 'Clubs']  # Suits for AI, opponent (unknown), and community cards
-
-emotion_6 = 0  # Neutral emotion
-weight_6 = 0  # Emotion weight does not affect
-
-print("Test Case 6 - Tie Scenario:")
-print(main(cardNums_6, cardSuites_6))  # Expected outcome: Ties or some neutral decision based on the tie logic in `monteCarlo`
+test_main()

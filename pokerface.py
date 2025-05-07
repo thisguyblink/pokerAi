@@ -46,41 +46,67 @@ def monteCarlo(nums, suits, sims):
     oppWins = 0
     ties = 0
     for i in range(sims):
+        # print(f'Simulation #{i}')
+        # print(f'Card numbers: {nums}')
+        # print(f'Card Suites: {suits}')
         val = simulate(nums, suits)
+        # print(f'Simulation Value: {val}')
         if  val == 1:
             aiWins += 1
-        if val == .5:
+        elif val == .5:
             ties += 1
         else:
             oppWins += 1
     print(f'Ai Wins: {aiWins}')
+    print(f'Ties: {ties}')
     print(f'Human Wins: {oppWins}')
     return aiWins / sims
 
 # list values: ai1, ai2, opp1, opp2, com1, com2, com3, com4, com5 for checking winner
 
 
-def simulate(nums, suits):
+def simulate2(nums, suits):
     ranks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-    suit = ['Spades', 'Hearts', 'Diamonds', 'Clubs']
+    types = ['Spades', 'Hearts', 'Diamonds', 'Clubs']
     allNums = [0] * 9
     allSuits = ["-"] * 9
     for i in range(9):
         if nums[i] != 0:
             allNums[i] = nums[i]
         else: 
-            allNums[i] = ranks[random.randint(0, 13)]
-        if suits[i] == "":
-            allSuits[i] == suits[i]
+            allNums[i] = random.choice(ranks)
+        if suits[i] != "":
+            allSuits[i] = suits[i]
         else:
-            allSuits == suit[random.randint(0, 3)]
+            allSuits[i] = random.choice(types)
+    return checkWinner(allNums, allSuits)
+
+def simulate(nums, suits):
+    # Define full deck
+    deck = [(num, suit) for num in range(2, 15) for suit in ['Spades', 'Hearts', 'Diamonds', 'Clubs']]
+    
+    # Track known cards
+    known_cards = [(nums[i], suits[i]) for i in range(9) if nums[i] != 0 and suits[i] != ""]
+    
+    # Remove known cards from deck
+    deck = [card for card in deck if card not in known_cards]
+    random.shuffle(deck)
+
+    # Create new list for all 9 cards (ai1, ai2, opp1, opp2, com1–5)
+    allNums = nums[:]
+    allSuits = suits[:]
+
+    for i in range(9):
+        if allNums[i] == 0 or allSuits[i] == "":
+            rand_card = deck.pop()
+            allNums[i], allSuits[i] = rand_card
+
     return checkWinner(allNums, allSuits)
 
 
+
 # need to add emotion and weight as parameters but will use set numbers for now 
-def main(cardNums, cardSuites):
-    weight = .1
-    emotion = .5
+def main(cardNums, cardSuites, emotion, weight):
     unweightedProb = monteCarlo(cardNums, cardSuites, 100)
     print(f'Unweighted Probability: {unweightedProb}' )
     weightedProb = addEmotion(unweightedProb, emotion, weight)
