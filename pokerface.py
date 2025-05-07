@@ -12,13 +12,19 @@
 import random
 from evaluate import checkWinner
 
+# val == 1 ALL IN 
+# val > .5 RAISE PROPORTIONALLY 
+# val < .5 and > 0  CALL PROPORTIONALLY
+# val == 0, call if no raise
+# val < 0 FOLD
+
 def decision(prob):
     # All in 
     if prob > .95:
-        return 100
+        return 1
     # Raise 
     if prob < .95 and prob >.75:
-        return
+        return prob
     # Call Agressive
     if prob < .75 and prob > .50:
         return .25
@@ -40,12 +46,15 @@ def monteCarlo(nums, suits, sims):
     oppWins = 0
     ties = 0
     for i in range(sims):
-        if simulate(nums) == 1:
+        val = simulate(nums, suits)
+        if  val == 1:
             aiWins += 1
-        if simulate(suits) == .5:
+        if val == .5:
             ties += 1
         else:
             oppWins += 1
+    print(f'Ai Wins: {aiWins}')
+    print(f'Human Wins: {oppWins}')
     return aiWins / sims
 
 # list values: ai1, ai2, opp1, opp2, com1, com2, com3, com4, com5 for checking winner
@@ -53,18 +62,18 @@ def monteCarlo(nums, suits, sims):
 
 def simulate(nums, suits):
     ranks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-    suits = ['Spades', 'Hearts', 'Diamonds', 'Clubs']
+    suit = ['Spades', 'Hearts', 'Diamonds', 'Clubs']
     allNums = [0] * 9
     allSuits = ["-"] * 9
     for i in range(9):
         if nums[i] != 0:
             allNums[i] = nums[i]
         else: 
-            allNums[i] = ranks[random.randint(0, 8)]
+            allNums[i] = ranks[random.randint(0, 13)]
         if suits[i] == "":
             allSuits[i] == suits[i]
         else:
-            allSuits == suits[random.randint(0, 3)]
+            allSuits == suit[random.randint(0, 3)]
     return checkWinner(allNums, allSuits)
 
 
@@ -73,6 +82,8 @@ def main(cardNums, cardSuites):
     weight = .1
     emotion = .5
     unweightedProb = monteCarlo(cardNums, cardSuites, 100)
+    print(f'Unweighted Probability: {unweightedProb}' )
     weightedProb = addEmotion(unweightedProb, emotion, weight)
+    print(f'Weighted Probability: {weightedProb}')
     return decision(weightedProb)
 
