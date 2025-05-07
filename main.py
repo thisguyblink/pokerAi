@@ -112,5 +112,13 @@ def aiDecision(cardNums, cardSuites, emotion, weight):
 
 def response(cardNums, cardSuites, emotion, weight, img):
     emotion, weight = read_image(img)
-    aiDecision(cardNums, cardSuites, emotion, weight)
+    emoVal = 0
+    if emotion in ["angry", "fear", "disgust", "sad"]:
+        emoVal = .5
+    if emotion == "happy":
+        emoVal = -.5
+    if emotion == "suprise":
+        weight /= 2
+    aiDecision(cardNums, cardSuites, emoVal, weight)
 
+  
