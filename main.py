@@ -12,33 +12,10 @@ import random
 from evaluate import checkWinner
 from emotionReader import read_image
 
-# val == 1 ALL IN 
-# val > .5 RAISE PROPORTIONALLY 
-# val < .5 and > 0  CALL PROPORTIONALLY
-# val == 0, call if no raise
-# val < 0 FOLD
-
-def decision(prob):
-    # All in 
-    if prob > .95:
-        return 1
-    # Raise 
-    if prob < .95 and prob >.75:
-        return prob
-    # Call Agressive
-    if prob < .75 and prob > .50:
-        return .25
-    # Call Passive
-    if prob < .5 and prob > .25:
-        return 0
-    # Fold 
-    if prob < .25:
-        return -1
-
 # -1 is super happy and 1 is super sad
 # might need to scale the input to match this
 def addEmotion(probability, emotion, weight):
-    return probability + (weight * emotion)
+    return probability + (float(weight) * float(emotion) * 0.2)
 
 
 def monteCarlo(nums, suits, sims):
@@ -67,7 +44,7 @@ def monteCarlo(nums, suits, sims):
 # Kinda work but keeping just incase 
 def simulate2(nums, suits):
     ranks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-    types = ['Spades', 'Hearts', 'Diamonds', 'Clubs']
+    types = ['Spade', 'Heart', 'Diamond', 'Club']
     allNums = [0] * 9
     allSuits = ["-"] * 9
     for i in range(9):
@@ -85,7 +62,7 @@ def simulate2(nums, suits):
 # Edit: This one works so I'm keeping it :)
 def simulate(nums, suits):
 
-    deck = [(num, suit) for num in range(2, 15) for suit in ['Spades', 'Hearts', 'Diamonds', 'Clubs']]
+    deck = [(num, suit) for num in range(2, 15) for suit in ['Spade', 'Heart', 'Diamond', 'Club']]
     
     known_cards = [(nums[i], suits[i]) for i in range(9) if nums[i] != 0 and suits[i] != ""]
 
@@ -108,10 +85,15 @@ def aiDecision(cardNums, cardSuites, emotion, weight):
     print(f'Unweighted Probability: {unweightedProb}' )
     weightedProb = addEmotion(unweightedProb, emotion, weight)
     print(f'Weighted Probability: {weightedProb}')
-    return decision(weightedProb)
+    return weightedProb
 
 def response(cardNums, cardSuites, weight, img):
-    emotion, _ = read_image(img)
-    aiDecision(cardNums, cardSuites, emotion, weight)
+    emotion, val = read_image(img)
+    print(emotion)
+    print(val)
+    if emotion == "positive" : 
+        val *= -1
+    val /= 100
+    return aiDecision(cardNums, cardSuites, val, weight)
 
   

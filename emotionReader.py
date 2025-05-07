@@ -23,11 +23,13 @@ def read_image(image):
             
     return ("positive", pos) if pos > neg else ("negative", neg)
 
-def read_image_as_cv2(file):
-    image = Image.open(file.stream).convert('RGB')
-    np_img = np.array(image)
+def read_image_as_cv2(image_file):
+    # Convert the image from Flask file object to a format usable by OpenCV
+    img = Image.open(image_file.stream).convert('RGB')
+    np_img = np.array(img)
     cv2_img = cv2.cvtColor(np_img, cv2.COLOR_RGB2BGR)
     return cv2_img
+
 
 
 if __name__ == "__main__":
