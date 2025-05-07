@@ -10,6 +10,7 @@
 # list values: ai1, ai2, opp1, opp2, com1, com2, com3, com4, com5 for checking winner
 import random
 from evaluate import checkWinner
+from emotionReader import read_image
 
 # val == 1 ALL IN 
 # val > .5 RAISE PROPORTIONALLY 
@@ -102,10 +103,14 @@ def simulate(nums, suits):
     return checkWinner(allNums, allSuits)
 
 # emotion and weight for emotion can be set during the api call in the flask server
-def main(cardNums, cardSuites, emotion, weight):
+def aiDecision(cardNums, cardSuites, emotion, weight):
     unweightedProb = monteCarlo(cardNums, cardSuites, 100)
     print(f'Unweighted Probability: {unweightedProb}' )
     weightedProb = addEmotion(unweightedProb, emotion, weight)
     print(f'Weighted Probability: {weightedProb}')
     return decision(weightedProb)
+
+def response(cardNums, cardSuites, emotion, weight, img):
+    emotion, weight = read_image(img)
+    aiDecision(cardNums, cardSuites, emotion, weight)
 

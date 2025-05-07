@@ -1,4 +1,4 @@
-from pokerface import main
+from main import response
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
@@ -19,6 +19,7 @@ def compute():
     suitsList = [str(x) for x in suits]
     emotion = data["emotion"]
     weight = data["weight"]
+    img = json.dumps(data["image"])
     # need the data formatted like ai1, ai2, opp1, opp2, com1, com2, com3, com4, com5 for numbers and suits
     # also need emotion and weight for emotion
     # main(numsList, suitsList, emotion, weight)
@@ -29,7 +30,7 @@ def compute():
     # val < 0 FOLD
     # These are the value it will return and what they mean 
 
-    return jsonify({"value" : main(numsList, suitsList, emotion, weight)})
+    return jsonify({"value" : response(numsList, suitsList, emotion, weight, img)})
 
 if __name__ == '__main__':
     app.run(port=8080)

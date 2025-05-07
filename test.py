@@ -1,4 +1,4 @@
-from pokerface import main
+from main import aiDecision
 
 def test_main():
     print("Test 1: Pre-flop, strong hand (AA), neutral emotion: Expect raise or all-in")
