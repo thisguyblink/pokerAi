@@ -32,4 +32,4 @@ def compute():
     return jsonify({"value" : main(numsList, suitsList, emotion, weight)})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=8080)
