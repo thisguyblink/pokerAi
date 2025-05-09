@@ -15,7 +15,7 @@ from emotionReader import read_image
 # -1 is super happy and 1 is super sad
 # might need to scale the input to match this
 def addEmotion(probability, emotion, weight):
-    return (probability + (float(weight) * float(emotion) * 0.2)) / 1.2
+    return probability + float(emotion * .25)
 
 
 def monteCarlo(nums, suits, sims):
