@@ -2,7 +2,6 @@ from deepface import DeepFace
 import cv2
 from PIL import Image
 import numpy as np
-import cv2
 
 def read_image(image):
     img = read_image_as_cv2(image)
